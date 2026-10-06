@@ -146,7 +146,7 @@ int bfs(Graph *graph, Edge **path) {
     Description
     */
     int i;
-    Node *nodeQueue[GRAPH_SIZE];
+    Node **nodeQueue = (Node**)malloc(graph->numNodes * sizeof(Node*));
     int qStart, qEnd;
 
     for(i = 0; i < graph->numNodes; i++) {
@@ -218,7 +218,7 @@ int edmondsKarp(Graph *graph) {
     /*
     Description
     */
-   Edge *path[1024];
+   Edge **path = (Edge**)malloc(graph->numNodes * sizeof(Edge*));
    int totalCapacity = 0;
 
    while(bfs(graph, path)) {
