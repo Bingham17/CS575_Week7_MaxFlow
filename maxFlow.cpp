@@ -107,7 +107,11 @@ void addEdge(Graph *graph, Node *n1, Node *n2, int cap) {
 
 Graph *readInputFile(ifstream &inputFile) {
     /*
-    Description
+    Read the input file and create the nodes and edges for graph creation
+    Parameters:
+        inputFile <&ifstream>: Input file stream to read from
+    Returns:
+        graph <Graph*>: Pointer to the graph constructed from the input data
     */
     Graph *graph;
     Edge *edge;
@@ -143,7 +147,14 @@ Graph *readInputFile(ifstream &inputFile) {
 
 int bfs(Graph *graph, Edge **path) {
     /*
-    Description
+    Perform breadth-first search from a start node to find a path to a finish node
+    Default start node is Node 0 and finish Node is Node N-1
+    Parameters:
+        graph <*Graph>: Graph that bfs is performed on
+        path <**Edge>: Pointer to an array of edges to store found path
+    Returns:
+        1: Path found
+        0: Path NOT found
     */
     int i;
     Node **nodeQueue = (Node**)malloc(graph->numNodes * sizeof(Node*));
@@ -195,7 +206,12 @@ int bfs(Graph *graph, Edge **path) {
 
 int pathCapacity(Graph *graph, Edge **path) {
     /*
-    Description
+    Calculate the minimum capacity of path edges and update their capacities and reverse edges accordingly
+    Parameters:
+        graph <*Graph>: Graph to calculate path capacity
+        path <**Edges>: Pointer to array of edges representing the path
+    Returns:
+        minCapacity <int>: minimum capacity of the path edges
     */
     int i;
     int minCapacity = -1;
@@ -216,17 +232,21 @@ int pathCapacity(Graph *graph, Edge **path) {
 
 int edmondsKarp(Graph *graph) {
     /*
-    Description
+    Perform the Edmonds-Karp algorithm; find maximum flow from start node to finish node in the graph
+    Parameters:
+        graph <*Graph>: Graph to perform algorithm on
+    Returns:
+        totalCapacity <int>: Maximum flow from start node to finish node
     */
-   Edge **path = (Edge**)malloc(graph->numNodes * sizeof(Edge*));
-   int totalCapacity = 0;
+    Edge **path = (Edge**)malloc(graph->numNodes * sizeof(Edge*));
+    int totalCapacity = 0;
+    bool choosePath = false;
 
-   while(bfs(graph, path)) {
+    while(bfs(graph, path)) {
         int cap;
         cap = pathCapacity(graph, path);
         totalCapacity += cap;
-   }
-
+    }
    return totalCapacity;
 }
 
@@ -239,7 +259,7 @@ int main(int argc, char *argv[]) {
     CommandLine Usage:
         - ./maxFlow <input_file>
     Command line arguments:
-        - argv[1]: The name of the input file containing the integers to be sorted.
+        - argv[1]: The name of the input file
         - If no command line argument is provided, the user will be prompted to enter the file name.
     Returns:
         - 0: Successful execution
@@ -263,21 +283,22 @@ int main(int argc, char *argv[]) {
         }
             graph = readInputFile(inputFile);
             flow = edmondsKarp(graph);
-    } else {
+    }   else {
             inputFile.open(argv[1]);
             if(!inputFile) {
                 cout << "Cannot Open File: " << argv[1] << endl;
                 cout << "Commandline Use: ./maxFlow <inputFile>" << endl;
                 return 1;
             }
-            cout << "File Opened: " << argv[1] << endl;
+            // cout << "File Opened: " << argv[1] << endl;
             graph = readInputFile(inputFile);
-            cout << "Graph Read" << endl;
+            // cout << "Graph Read" << endl;
             flow = edmondsKarp(graph);
-            cout << "Max Flow Calculated" << endl;
+            // cout << "Max Flow Calculated" << endl;
         }
 
-    cout << "Max Flow: " << flow << endl;
+    // cout << "Max Flow: " << flow << endl;
+    cout << flow << endl; //Print the max flow value to standard output
 
     return 0;
 
